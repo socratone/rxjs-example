@@ -7,9 +7,9 @@ let count = 0;
 const fetchMock = (): Promise<string> => {
   count++;
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     if (count > 3) {
-      resolve('ok');
+      resolve('finished');
     } else {
       resolve('loading');
     }
@@ -17,7 +17,7 @@ const fetchMock = (): Promise<string> => {
 };
 
 function PollingPage() {
-  const [data, setData] = useState('');
+  const [message, setMessage] = useState('');
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -25,9 +25,9 @@ function PollingPage() {
       .pipe(switchMap(() => fetchMock()))
       .subscribe({
         next: (result: string) => {
-          if (result === 'ok') {
+          if (result === 'finished') {
             subscription.unsubscribe();
-            setData(result);
+            setMessage('Finished');
           }
         },
         error: () => {
@@ -39,8 +39,9 @@ function PollingPage() {
 
   return (
     <div>
-      {error && <div>Error</div>}
-      {data && <div>Data: {data}</div>}
+      {!message && !error ? <div>Loading</div> : null}
+      {error ? <div>Error</div> : null}
+      {message ? <div>{message}</div> : null}
     </div>
   );
 }
