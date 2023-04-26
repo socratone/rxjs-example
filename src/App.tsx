@@ -1,5 +1,8 @@
+import PollingPage from './pages/polling';
+import PromisePage from './pages/promise';
+
 function App() {
-  return <div>hello world</div>;
+  return <PollingPage />;
 }
 
 export default App;
